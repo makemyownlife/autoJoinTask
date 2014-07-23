@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TlBonusTop">
+
+    <select id="getCountTlBonusTop" parameterType="map" resultType="int">
+        <![CDATA[
+          SELECT COUNT(1) FROM tl_bonus_top T
+          WHERE T.CREATE_TIME > SYSDATE - #{range}
+        ]]>
+    </select>
+
+    <select id="getRangeInfo" parameterType="int"  resultType="map">
+        <![CDATA[
+           SELECT  COUNT(1) AS COUNT_NUMBER ,MAX(T.ID) AS MAX_ID,MIN(T.ID) AS MIN_ID FROM TL_BONUS_TOP T
+           WHERE
+           T.CREATE_TIME > SYSDATE - #{range}
+        ]]>
+    </select>
+
+    <select id="getTlBonusTopList" parameterType="map" resultType="map">
+        <![CDATA[
+                SELECT T.USER_NAME,
+                        TO_CHAR(SUM(T.BONUS_AMOUNT)) AS BONUS_AMOUNT,
+                        T.LOTTERY_CLASS_CODE,
+                        TO_CHAR(count(1)) AS WIN_COUNT
+                 FROM tl_bonus_top T
+                 where 1=1
+                 AND T.id >= #{startId}
+                 AND T.id <= #{endId}
+                 group by T.User_Name,T.LOTTERY_CLASS_CODE
+        ]]>
+    </select>
+
+</mapper>

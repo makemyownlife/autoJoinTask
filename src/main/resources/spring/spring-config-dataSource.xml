@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+       default-lazy-init="true">
+
+    <!-- 数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${db.connection.url}"/>
+        <property name="username" value="${db.connection.username}"/>
+        <property name="password" value="${db.connection.password}"/>
+
+        <property name="filters" value="stat"/>
+
+        <property name="maxActive" value="50"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="3"/>
+
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 'x' from dual"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="50"/>
+    </bean>
+
+    <!-- sqlSessionFactory 属性 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:sqlmap/*.xml"/>
+    </bean>
+
+    <!-- 事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- ================================================== 基于注解的配置  ============================================================= -->
+    <!-- =================================================================== -->
+    <!-- 指定Spring配置中用到的资源.properties文件 -->
+    <!-- =================================================================== -->
+    <context:property-placeholder location="classpath:lottery.properties" ignore-unresolvable="true"/>
+
+    <!-- =================================================================== -->
+    <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+    <!-- =================================================================== -->
+    <context:component-scan base-package="com.diyicai">
+        <!-- <context:include-filter type="regex" expression="com\.application\.bean\.*"/> -->
+        <!-- <context:include-filter type="regex" expression="com\.application\.service\..*Service.*"/> -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- =================================================================== -->
+    <!-- Enable @AspectJ support 支持 @AspectJ 标记 -->
+    <!-- =================================================================== -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- =================================================================== -->
+    <!-- Enable @Configured suppor -->
+    <!-- =================================================================== -->
+    <aop:spring-configured/>
+
+    <!-- =================================================================== -->
+    <!-- Enable @Transactional support 支持 @Transactional 标记 -->
+    <!-- =================================================================== -->
+    <tx:annotation-driven/>
+
+
+</beans>

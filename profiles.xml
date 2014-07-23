@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profilesXml xmlns="http://maven.apache.org/PROFILES/1.0.0"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://maven.apache.org/PROFILES/1.0.0 http://maven.apache.org/xsd/profiles-1.0.0.xsd">
+    <profiles>
+
+        <!-- 开发环境  -->
+        <profile>
+            <id>development</id>
+            <properties>
+                <db.connection.driver_class>oracle.jdbc.driver.OracleDriver</db.connection.driver_class>
+                <db.connection.url>jdbc:oracle:thin:@192.168.5.29:1521:ORCL</db.connection.url>
+                <db.connection.username>lotterybai</db.connection.username>
+                <db.connection.password>lotterybai</db.connection.password>
+                <file.store.path>D:\\temp</file.store.path>
+            </properties>
+        </profile>
+
+        <!-- 正式环境 -->
+        <profile>
+            <id>production</id>
+            <properties>
+                <db.connection.driver_class>oracle.jdbc.driver.OracleDriver</db.connection.driver_class>
+                <db.connection.url>jdbc:oracle:thin:@192.168.1.27:1521:smsdb</db.connection.url>
+                <db.connection.username>lottery</db.connection.username>
+                <db.connection.password>lottery</db.connection.password>
+                <file.store.path>/app/temp</file.store.path>
+            </properties>
+        </profile>
+
+    </profiles>
+</profilesXml>

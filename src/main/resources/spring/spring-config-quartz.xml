@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="tlBonusTopTask_quartz" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="tlBonusTopTask"/>
+        </property>
+        <property name="targetMethod">
+            <value>doJob</value>
+        </property>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="tlBonusTopTask_time" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="tlBonusTopTask_quartz"/>
+        </property>
+        <property name="cronExpression">
+            <value>${TASK_CRON}</value>
+        </property>
+    </bean>
+
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startQuertz" lazy-init="false" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="tlBonusTopTask_time"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>
